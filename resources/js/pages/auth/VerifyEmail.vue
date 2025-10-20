@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import EmailVerificationNotificationController from '@/actions/App/Http/Controllers/Auth/EmailVerificationNotificationController';
 import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
+import Button from 'primevue/button';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { logout } from '@/routes';
 import { Form, Head } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
 
 defineProps<{
     status?: string;
@@ -32,10 +31,12 @@ defineProps<{
             class="space-y-6 text-center"
             v-slot="{ processing }"
         >
-            <Button :disabled="processing" variant="secondary">
-                <LoaderCircle v-if="processing" class="h-4 w-4 animate-spin" />
-                Resend verification email
-            </Button>
+            <Button type="submit"
+                    severity="secondary"
+                    label="Resend verification email"
+                    :loading="processing"
+                    :disabled="processing"
+                    size="small"/>
 
             <TextLink
                 :href="logout()"

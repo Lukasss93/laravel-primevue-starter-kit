@@ -1,13 +1,7 @@
 <script setup lang="ts">
 import AlertError from '@/components/AlertError.vue';
-import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import Button from 'primevue/button';
+import Card from 'primevue/card';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import { regenerateRecoveryCodes } from '@/routes/two-factor';
 import { Form } from '@inertiajs/vue3';
@@ -40,23 +34,25 @@ onMounted(async () => {
 
 <template>
     <Card class="w-full">
-        <CardHeader>
-            <CardTitle class="flex gap-3">
-                <LockKeyhole class="size-4" />2FA Recovery Codes
-            </CardTitle>
-            <CardDescription>
+        <template #title>
+            <div class="flex items-center gap-3 text-lg">
+                <LockKeyhole :size="18" />2FA Recovery Codes
+            </div>
+        </template>
+        <template #subtitle>
+            <div class="text-sm">
                 Recovery codes let you regain access if you lose your 2FA
                 device. Store them in a secure password manager.
-            </CardDescription>
-        </CardHeader>
-        <CardContent>
+            </div>
+        </template>
+        <template #content>
             <div
                 class="flex flex-col gap-3 select-none sm:flex-row sm:items-center sm:justify-between"
             >
-                <Button @click="toggleRecoveryCodesVisibility" class="w-fit">
+                <Button @click="toggleRecoveryCodesVisibility" size="small" class="w-fit">
                     <component
                         :is="isRecoveryCodesVisible ? EyeOff : Eye"
-                        class="size-4"
+                        :size="18"
                     />
                     {{ isRecoveryCodesVisible ? 'Hide' : 'View' }} Recovery
                     Codes
@@ -71,11 +67,12 @@ onMounted(async () => {
                     #default="{ processing }"
                 >
                     <Button
-                        variant="secondary"
+                        severity="secondary"
+                        size="small"
                         type="submit"
                         :disabled="processing"
                     >
-                        <RefreshCw /> Regenerate Codes
+                        <RefreshCw :size="18" /> Regenerate Codes
                     </Button>
                 </Form>
             </div>
@@ -118,6 +115,6 @@ onMounted(async () => {
                     </p>
                 </div>
             </div>
-        </CardContent>
+        </template>
     </Card>
 </template>

@@ -2,15 +2,15 @@
 import AuthenticatedSessionController from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import Button from 'primevue/button';
+import Checkbox from 'primevue/checkbox';
+import InputText from 'primevue/inputtext';
+import Password from 'primevue/password';
+import Label from '@/components/Label.vue';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { register } from '@/routes';
 import { request } from '@/routes/password';
 import { Form, Head } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
 
 defineProps<{
     status?: string;
@@ -41,16 +41,14 @@ defineProps<{
             <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="email">Email address</Label>
-                    <Input
-                        id="email"
-                        type="email"
-                        name="email"
-                        required
-                        autofocus
-                        :tabindex="1"
-                        autocomplete="email"
-                        placeholder="email@example.com"
-                    />
+                    <InputText id="email"
+                               type="email"
+                               name="email"
+                               size="small"
+                               autofocus
+                               required
+                               :tabindex="1"
+                               placeholder="email@example.com"/>
                     <InputError :message="errors.email" />
                 </div>
 
@@ -66,38 +64,32 @@ defineProps<{
                             Forgot password?
                         </TextLink>
                     </div>
-                    <Input
-                        id="password"
-                        type="password"
-                        name="password"
-                        required
-                        :tabindex="2"
-                        autocomplete="current-password"
-                        placeholder="Password"
-                    />
+                    <Password inputId="password"
+                              name="password"
+                              :feedback="false"
+                              size="small"
+                              fluid
+                              required
+                              :pt="{pcInputText:{root:{tabindex:2}}}"
+                              placeholder="Password"/>
                     <InputError :message="errors.password" />
                 </div>
 
                 <div class="flex items-center justify-between">
-                    <Label for="remember" class="flex items-center space-x-3">
-                        <Checkbox id="remember" name="remember" :tabindex="3" />
+                    <Label for="remember" class="flex items-center">
+                        <Checkbox inputId="remember" name="remember" binary :tabindex="3" />
                         <span>Remember me</span>
                     </Label>
                 </div>
 
-                <Button
-                    type="submit"
-                    class="mt-4 w-full"
-                    :tabindex="4"
-                    :disabled="processing"
-                    data-test="login-button"
-                >
-                    <LoaderCircle
-                        v-if="processing"
-                        class="h-4 w-4 animate-spin"
-                    />
-                    Log in
-                </Button>
+                <Button type="submit"
+                             class="mt-4"
+                             label="Log in"
+                             :tabindex="4"
+                             :loading="processing"
+                             :disabled="processing"
+                             size="small"
+                             data-test="login-button"/>
             </div>
 
             <div class="text-center text-sm text-muted-foreground">

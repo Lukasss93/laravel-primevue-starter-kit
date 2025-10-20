@@ -2,16 +2,16 @@
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.vue';
 import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.vue';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import Badge from 'primevue/badge';
+import Button from 'primevue/button';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { disable, enable, show } from '@/routes/two-factor';
-import { BreadcrumbItem } from '@/types';
 import { Form, Head } from '@inertiajs/vue3';
 import { ShieldBan, ShieldCheck } from 'lucide-vue-next';
 import { onUnmounted, ref } from 'vue';
+import type { MenuItem } from 'primevue/menuitem';
 
 interface Props {
     requiresConfirmation?: boolean;
@@ -23,10 +23,10 @@ withDefaults(defineProps<Props>(), {
     twoFactorEnabled: false,
 });
 
-const breadcrumbs: BreadcrumbItem[] = [
+const breadcrumb: MenuItem[] = [
     {
-        title: 'Two-Factor Authentication',
-        href: show.url(),
+        label: 'Two-Factor Authentication',
+        url: show.url(),
     },
 ];
 
@@ -39,7 +39,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbs">
+    <AppLayout :breadcrumb="breadcrumb">
         <Head title="Two-Factor Authentication" />
         <SettingsLayout>
             <div class="space-y-6">
@@ -52,7 +52,7 @@ onUnmounted(() => {
                     v-if="!twoFactorEnabled"
                     class="flex flex-col items-start justify-start space-y-4"
                 >
-                    <Badge variant="destructive">Disabled</Badge>
+                    <Badge severity="danger">Disabled</Badge>
 
                     <p class="text-muted-foreground">
                         When you enable two-factor authentication, you will be
@@ -62,10 +62,9 @@ onUnmounted(() => {
                     </p>
 
                     <div>
-                        <Button
-                            v-if="hasSetupData"
-                            @click="showSetupModal = true"
-                        >
+                        <Button v-if="hasSetupData"
+                                @click="showSetupModal = true"
+                                size="small">
                             <ShieldCheck />Continue Setup
                         </Button>
                         <Form
@@ -74,10 +73,10 @@ onUnmounted(() => {
                             @success="showSetupModal = true"
                             #default="{ processing }"
                         >
-                            <Button type="submit" :disabled="processing">
+                            <Button type="submit" size="small" :disabled="processing">
                                 <ShieldCheck />Enable 2FA</Button
-                            ></Form
-                        >
+                            >
+                        </Form>
                     </div>
                 </div>
 
@@ -85,7 +84,7 @@ onUnmounted(() => {
                     v-else
                     class="flex flex-col items-start justify-start space-y-4"
                 >
-                    <Badge variant="default">Enabled</Badge>
+                    <Badge severity="success">Enabled</Badge>
 
                     <p class="text-muted-foreground">
                         With two-factor authentication enabled, you will be
@@ -99,12 +98,12 @@ onUnmounted(() => {
                     <div class="relative inline">
                         <Form v-bind="disable.form()" #default="{ processing }">
                             <Button
-                                variant="destructive"
+                                severity="danger"
+                                size="small"
                                 type="submit"
                                 :disabled="processing"
                             >
-                                <ShieldBan />
-                                Disable 2FA
+                                <ShieldBan />Disable 2FA
                             </Button>
                         </Form>
                     </div>

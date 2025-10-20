@@ -6,26 +6,32 @@ import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { edit } from '@/routes/password';
 import { Form, Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
-
 import HeadingSmall from '@/components/HeadingSmall.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { type BreadcrumbItem } from '@/types';
+import Button from 'primevue/button';
+import Password from 'primevue/password';
+import Label from '@/components/Label.vue';
+import { MenuItem } from 'primevue/menuitem';
 
-const breadcrumbItems: BreadcrumbItem[] = [
+const breadcrumbItems: MenuItem[] = [
     {
-        title: 'Password settings',
-        href: edit().url,
+        label: 'Password settings',
+        url: edit().url,
     },
 ];
 
-const passwordInput = ref<HTMLInputElement | null>(null);
-const currentPasswordInput = ref<HTMLInputElement | null>(null);
+const currentPasswordInput = ref('');
+const passwordInput = ref('');
+const passwordConfirmationInput = ref('');
+
+function reset() {
+    currentPasswordInput.value = '';
+    passwordInput.value = '';
+    passwordConfirmationInput.value = '';
+}
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbItems">
+    <AppLayout :breadcrumb="breadcrumbItems">
         <Head title="Password settings" />
 
         <SettingsLayout>
@@ -40,40 +46,31 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                     :options="{
                         preserveScroll: true,
                     }"
-                    reset-on-success
-                    :reset-on-error="[
-                        'password',
-                        'password_confirmation',
-                        'current_password',
-                    ]"
+                    :onFinish="reset"
                     class="space-y-6"
                     v-slot="{ errors, processing, recentlySuccessful }"
                 >
                     <div class="grid gap-2">
                         <Label for="current_password">Current password</Label>
-                        <Input
-                            id="current_password"
-                            ref="currentPasswordInput"
-                            name="current_password"
-                            type="password"
-                            class="mt-1 block w-full"
-                            autocomplete="current-password"
-                            placeholder="Current password"
-                        />
+                        <Password inputId="current_password"
+                                  name="current_password"
+                                  v-model="currentPasswordInput"
+                                  :feedback="false"
+                                  size="small"
+                                  fluid
+                                  placeholder="Current password"/>
                         <InputError :message="errors.current_password" />
                     </div>
 
                     <div class="grid gap-2">
                         <Label for="password">New password</Label>
-                        <Input
-                            id="password"
-                            ref="passwordInput"
-                            name="password"
-                            type="password"
-                            class="mt-1 block w-full"
-                            autocomplete="new-password"
-                            placeholder="New password"
-                        />
+                        <Password inputId="password"
+                                  name="password"
+                                  v-model="passwordInput"
+                                  :feedback="false"
+                                  size="small"
+                                  fluid
+                                  placeholder="New password"/>
                         <InputError :message="errors.password" />
                     </div>
 
@@ -81,23 +78,25 @@ const currentPasswordInput = ref<HTMLInputElement | null>(null);
                         <Label for="password_confirmation"
                             >Confirm password</Label
                         >
-                        <Input
-                            id="password_confirmation"
-                            name="password_confirmation"
-                            type="password"
-                            class="mt-1 block w-full"
-                            autocomplete="new-password"
-                            placeholder="Confirm password"
-                        />
+                        <Password inputId="password_confirmation"
+                                  name="password_confirmation"
+                                  v-model="passwordConfirmationInput"
+                                  :feedback="false"
+                                  size="small"
+                                  fluid
+                                  placeholder="Confirm password"/>
                         <InputError :message="errors.password_confirmation" />
                     </div>
 
                     <div class="flex items-center gap-4">
                         <Button
+                            type="submit"
+                            label="Save password"
+                            :loading="processing"
                             :disabled="processing"
+                            size="small"
                             data-test="update-password-button"
-                            >Save password</Button
-                        >
+                        />
 
                         <Transition
                             enter-active-class="transition ease-in-out"

@@ -7,12 +7,12 @@ import { Form, Head, Link, usePage } from '@inertiajs/vue3';
 import DeleteUser from '@/components/DeleteUser.vue';
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import Button from 'primevue/button';
+import InputText from 'primevue/inputtext';
+import Label from '@/components/Label.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-import { type BreadcrumbItem } from '@/types';
+import type { MenuItem } from 'primevue/menuitem';
 
 interface Props {
     mustVerifyEmail: boolean;
@@ -21,10 +21,10 @@ interface Props {
 
 defineProps<Props>();
 
-const breadcrumbItems: BreadcrumbItem[] = [
+const breadcrumbItems: MenuItem[] = [
     {
-        title: 'Profile settings',
-        href: edit().url,
+        label: 'Profile settings',
+        url: edit().url,
     },
 ];
 
@@ -33,7 +33,7 @@ const user = page.props.auth.user;
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbItems">
+    <AppLayout :breadcrumb="breadcrumbItems">
         <Head title="Profile settings" />
 
         <SettingsLayout>
@@ -50,30 +50,25 @@ const user = page.props.auth.user;
                 >
                     <div class="grid gap-2">
                         <Label for="name">Name</Label>
-                        <Input
-                            id="name"
-                            class="mt-1 block w-full"
-                            name="name"
-                            :default-value="user.name"
-                            required
-                            autocomplete="name"
-                            placeholder="Full name"
-                        />
+                        <InputText id="name"
+                                   type="text"
+                                   name="name"
+                                   size="small"
+                                   required
+                                   :default-value="user.name"
+                                   placeholder="Full name"/>
                         <InputError class="mt-2" :message="errors.name" />
                     </div>
 
                     <div class="grid gap-2">
                         <Label for="email">Email address</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            class="mt-1 block w-full"
-                            name="email"
-                            :default-value="user.email"
-                            required
-                            autocomplete="username"
-                            placeholder="Email address"
-                        />
+                        <InputText id="email"
+                                   type="email"
+                                   name="email"
+                                   size="small"
+                                   required
+                                   :default-value="user.email"
+                                   placeholder="Email address"/>
                         <InputError class="mt-2" :message="errors.email" />
                     </div>
 
@@ -99,11 +94,12 @@ const user = page.props.auth.user;
                     </div>
 
                     <div class="flex items-center gap-4">
-                        <Button
-                            :disabled="processing"
-                            data-test="update-profile-button"
-                            >Save</Button
-                        >
+                        <Button type="submit"
+                                label="Save"
+                                :loading="processing"
+                                :disabled="processing"
+                                size="small"
+                                data-test="update-profile-button"/>
 
                         <Transition
                             enter-active-class="transition ease-in-out"

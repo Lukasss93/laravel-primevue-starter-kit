@@ -24,4 +24,14 @@ export default defineConfig({
             },
         }),
     ],
+    server: {
+        host: '0.0.0.0',
+        hmr: {
+            host: 'localhost',
+        },
+        strictPort: true,
+    },
+    build: {
+        sourcemap: true,
+    }
 });

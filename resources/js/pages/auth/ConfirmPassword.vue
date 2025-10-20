@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import Button from 'primevue/button';
+import Password from 'primevue/password';
+import Label from '@/components/Label.vue';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { store } from '@/routes/password/confirm';
 import { Form, Head } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
 </script>
 
 <template>
@@ -24,32 +23,25 @@ import { LoaderCircle } from 'lucide-vue-next';
             <div class="space-y-6">
                 <div class="grid gap-2">
                     <Label htmlFor="password">Password</Label>
-                    <Input
-                        id="password"
-                        type="password"
-                        name="password"
-                        class="mt-1 block w-full"
-                        required
-                        autocomplete="current-password"
-                        autofocus
-                    />
+                    <Password inputId="password"
+                              name="password"
+                              :feedback="false"
+                              size="small"
+                              fluid
+                              required
+                              autofocus
+                              placeholder="Your password"/>
 
                     <InputError :message="errors.password" />
                 </div>
 
-                <div class="flex items-center">
-                    <Button
-                        class="w-full"
+                <Button type="submit"
+                        label="Confirm Password"
+                        :loading="processing"
                         :disabled="processing"
-                        data-test="confirm-password-button"
-                    >
-                        <LoaderCircle
-                            v-if="processing"
-                            class="h-4 w-4 animate-spin"
-                        />
-                        Confirm Password
-                    </Button>
-                </div>
+                        size="small"
+                        fluid
+                        data-test="confirm-password-button"/>
             </div>
         </Form>
     </AuthLayout>

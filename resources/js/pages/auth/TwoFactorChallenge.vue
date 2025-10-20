@@ -1,12 +1,8 @@
 <script setup lang="ts">
 import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-    PinInput,
-    PinInputGroup,
-    PinInputSlot,
-} from '@/components/ui/pin-input';
+import Button from 'primevue/button';
+import InputOtp from 'primevue/inputotp';
+import InputText from 'primevue/inputtext';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { store } from '@/routes/two-factor/login';
 import { Form, Head } from '@inertiajs/vue3';
@@ -41,11 +37,10 @@ const showRecoveryInput = ref<boolean>(false);
 const toggleRecoveryMode = (clearErrors: () => void): void => {
     showRecoveryInput.value = !showRecoveryInput.value;
     clearErrors();
-    code.value = [];
+    code.value = '';
 };
 
-const code = ref<number[]>([]);
-const codeValue = computed<string>(() => code.value.join(''));
+const code = ref<string>('');
 </script>
 
 <template>
@@ -61,42 +56,29 @@ const codeValue = computed<string>(() => code.value.join(''));
                     v-bind="store.form()"
                     class="space-y-4"
                     reset-on-error
-                    @error="code = []"
+                    @error="code = ''"
+                    :transform="(data) => ({ ...data, code })"
                     #default="{ errors, processing, clearErrors }"
                 >
-                    <input type="hidden" name="code" :value="codeValue" />
-                    <div
-                        class="flex flex-col items-center justify-center space-y-3 text-center"
-                    >
-                        <div class="flex w-full items-center justify-center">
-                            <PinInput
-                                id="otp"
-                                placeholder="○"
-                                v-model="code"
-                                type="number"
-                                otp
-                            >
-                                <PinInputGroup>
-                                    <PinInputSlot
-                                        v-for="(id, index) in 6"
-                                        :key="id"
-                                        :index="index"
-                                        :disabled="processing"
-                                        autofocus
-                                    />
-                                </PinInputGroup>
-                            </PinInput>
+                    <div class="flex flex-col items-center justify-center space-y-3 text-center">
+                        <div class="flex flex-col gap-4 w-full items-center justify-center">
+                            <InputOtp inputId="code" name="code" :length="6" integerOnly v-model="code"/>
                         </div>
                         <InputError :message="errors.code" />
                     </div>
-                    <Button type="submit" class="w-full" :disabled="processing"
-                        >Continue</Button
-                    >
+
+                    <Button type="submit"
+                            label="Continue"
+                            fluid
+                            :loading="processing"
+                            :disabled="processing"
+                            size="small"/>
+
                     <div class="text-center text-sm text-muted-foreground">
                         <span>or you can </span>
                         <button
                             type="button"
-                            class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+                            class="cursor-pointer text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                             @click="() => toggleRecoveryMode(clearErrors)"
                         >
                             {{ authConfigContent.toggleText }}
@@ -112,23 +94,29 @@ const codeValue = computed<string>(() => code.value.join(''));
                     reset-on-error
                     #default="{ errors, processing, clearErrors }"
                 >
-                    <Input
-                        name="recovery_code"
-                        type="text"
-                        placeholder="Enter recovery code"
-                        :autofocus="showRecoveryInput"
-                        required
-                    />
+                    <InputText id="recovery_code"
+                               type="text"
+                               name="recovery_code"
+                               size="small"
+                               :autofocus="showRecoveryInput"
+                               required
+                               fluid
+                               placeholder="Enter recovery code"/>
+
                     <InputError :message="errors.recovery_code" />
-                    <Button type="submit" class="w-full" :disabled="processing"
-                        >Continue</Button
-                    >
+
+                    <Button type="submit"
+                            label="Continue"
+                            fluid
+                            :loading="processing"
+                            :disabled="processing"
+                            size="small"/>
 
                     <div class="text-center text-sm text-muted-foreground">
                         <span>or you can </span>
                         <button
                             type="button"
-                            class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+                            class="cursor-pointer text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
                             @click="() => toggleRecoveryMode(clearErrors)"
                         >
                             {{ authConfigContent.toggleText }}

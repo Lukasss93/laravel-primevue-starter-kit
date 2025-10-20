@@ -1,31 +1,36 @@
 <script setup lang="ts">
 import Heading from '@/components/Heading.vue';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { toUrl, urlIsActive } from '@/lib/utils';
+import Button from 'primevue/button';
+import Divider from 'primevue/divider';
+import { cn, toUrl, urlIsActive } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit as editPassword } from '@/routes/password';
 import { edit as editProfile } from '@/routes/profile';
 import { show } from '@/routes/two-factor';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
+import { RectangleEllipsis, KeyRound, Palette, User } from 'lucide-vue-next';
 
 const sidebarNavItems: NavItem[] = [
     {
         title: 'Profile',
         href: editProfile(),
+        icon: User,
     },
     {
         title: 'Password',
         href: editPassword(),
+        icon: KeyRound,
     },
     {
         title: 'Two-Factor Auth',
         href: show(),
+        icon: RectangleEllipsis,
     },
     {
         title: 'Appearance',
         href: editAppearance(),
+        icon: Palette,
     },
 ];
 
@@ -45,14 +50,14 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
                     <Button
                         v-for="item in sidebarNavItems"
                         :key="toUrl(item.href)"
-                        variant="ghost"
-                        :class="[
-                            'w-full justify-start',
-                            { 'bg-muted': urlIsActive(item.href, currentPath) },
-                        ]"
-                        as-child
+                        :text="!urlIsActive(item.href, currentPath)"
+                        fluid
+                        v-slot="slotProps"
+                        severity="secondary"
+                        size="small"
+                        asChild
                     >
-                        <Link :href="item.href">
+                        <Link :href="item.href" :class="cn(slotProps.class, 'font-medium justify-start!')">
                             <component :is="item.icon" class="h-4 w-4" />
                             {{ item.title }}
                         </Link>
@@ -60,7 +65,7 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
                 </nav>
             </aside>
 
-            <Separator class="my-6 lg:hidden" />
+            <Divider class="lg:hidden!" />
 
             <div class="flex-1 md:max-w-2xl">
                 <section class="max-w-xl space-y-12">
