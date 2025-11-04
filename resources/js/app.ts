@@ -8,6 +8,7 @@ import { initializeTheme } from './composables/useAppearance';
 import PrimeVue from 'primevue/config';
 import PrimeVuePreset from './preset';
 import PrimeVuePassThrough from './passthrough';
+import StyleClass from 'primevue/styleclass';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -30,6 +31,7 @@ createInertiaApp({
                 },
                 pt: PrimeVuePassThrough,
             })
+            .directive('styleclass', StyleClass)
             .mount(el);
     },
     progress: {

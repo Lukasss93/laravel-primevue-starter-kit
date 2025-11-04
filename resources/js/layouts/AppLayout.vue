@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import AppLayout from '@/layouts/app/AppSidebarLayout.vue';
+//import AppLayout from '@/layouts/app/AppSidebarLayout.vue';
+//import AppLayout from '@/layouts/app/AppHeaderLayout.vue';
+//import AppLayout from '@/layouts/app/AppStackedLayout.vue';
+import AppLayout from '@/layouts/app/PrimeSidebarLayout.vue';
 import type { MenuItem } from 'primevue/menuitem';
 
-interface Props {
-    breadcrumb?: MenuItem[];
-}
-
-withDefaults(defineProps<Props>(), {
-    breadcrumb: () => [],
-});
+const {
+    breadcrumb = [],
+} = defineProps<{
+    breadcrumb: MenuItem[];
+}>();
 </script>
 
 <template>

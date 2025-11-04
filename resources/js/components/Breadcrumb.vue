@@ -2,14 +2,17 @@
 import PrimeBreadcrumb from 'primevue/breadcrumb';
 import { MenuItem } from 'primevue/menuitem';
 import { Link } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 defineProps<{
     items: MenuItem[];
 }>();
+
+const home = ref({icon: 'pi pi-home', url: '/'});
 </script>
 
 <template>
-    <PrimeBreadcrumb :model="items" class="p-0! bg-transparent!">
+    <PrimeBreadcrumb :home :model="items" class="p-0! bg-transparent!">
         <template #item="{item}">
             <div v-if="item.disabled" class="flex items-center">
                 <i :class="item.icon" />

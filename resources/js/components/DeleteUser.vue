@@ -8,6 +8,7 @@ import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import Password from 'primevue/password';
 import Label from '@/components/Label.vue';
+import Message from 'primevue/message';
 
 const dialogVisible = ref(false);
 const passwordInput = useTemplateRef<HTMLInputElement | null>('passwordInput');
@@ -89,22 +90,20 @@ function confirm() {
             title="Delete account"
             description="Delete your account and all of its resources"
         />
-        <div
-            class="space-y-4 rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10"
-        >
-            <div class="relative space-y-0.5 text-red-600 dark:text-red-100">
-                <p class="font-medium">Warning</p>
-                <p class="text-sm">
-                    Please proceed with caution, this cannot be undone.
-                </p>
-            </div>
+
+        <Message severity="error">
+            <p class="font-medium">Warning</p>
+            <p class="text-sm">
+                Please proceed with caution, this cannot be undone.
+            </p>
             <Button
                 label="Delete account"
                 @click="openDialog"
                 size="small"
                 severity="danger"
+                class="mt-4"
                 data-test="delete-user-button"
             />
-        </div>
+        </Message>
     </div>
 </template>

@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import Heading from '@/components/Heading.vue';
-import Button from 'primevue/button';
 import Divider from 'primevue/divider';
-import { cn, toUrl, urlIsActive } from '@/lib/utils';
+import { urlIsActive } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit as editPassword } from '@/routes/password';
 import { edit as editProfile } from '@/routes/profile';
 import { show } from '@/routes/two-factor';
 import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
-import { RectangleEllipsis, KeyRound, Palette, User } from 'lucide-vue-next';
+import { KeyRound, Palette, RectangleEllipsis, User } from 'lucide-vue-next';
+import ButtonLink from '@/components/ButtonLink.vue';
 
 const sidebarNavItems: NavItem[] = [
     {
@@ -38,7 +37,7 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
 </script>
 
 <template>
-    <div class="px-4 py-6">
+    <div>
         <Heading
             title="Settings"
             description="Manage your profile and account settings"
@@ -47,21 +46,19 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
         <div class="flex flex-col lg:flex-row lg:space-x-12">
             <aside class="w-full max-w-xl lg:w-48">
                 <nav class="flex flex-col space-y-1 space-x-0">
-                    <Button
-                        v-for="item in sidebarNavItems"
-                        :key="toUrl(item.href)"
-                        :text="!urlIsActive(item.href, currentPath)"
-                        fluid
-                        v-slot="slotProps"
-                        severity="secondary"
+                    <ButtonLink
+                        v-for="(item, i) in sidebarNavItems"
+                        :key="i"
+                        :href="item.href"
                         size="small"
-                        asChild
+                        :variant="!urlIsActive(item.href, currentPath)?'text':undefined"
+                        severity="secondary"
                     >
-                        <Link :href="item.href" :class="cn(slotProps.class, 'font-medium justify-start!')">
+                        <div class="flex w-full items-center flex-row gap-2">
                             <component :is="item.icon" class="h-4 w-4" />
-                            {{ item.title }}
-                        </Link>
-                    </Button>
+                            <div>{{ item.title }}</div>
+                        </div>
+                    </ButtonLink>
                 </nav>
             </aside>
 

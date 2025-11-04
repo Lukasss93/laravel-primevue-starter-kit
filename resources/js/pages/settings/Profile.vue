@@ -11,7 +11,7 @@ import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import Label from '@/components/Label.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import SettingsLayout from '@/layouts/settings/Layout.vue';
+import SettingsLayout from '@/layouts/SettingsLayout.vue';
 import type { MenuItem } from 'primevue/menuitem';
 
 interface Props {

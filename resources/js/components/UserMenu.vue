@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue';
 import { LogOut, Settings } from 'lucide-vue-next';
-import { Link, router } from '@inertiajs/vue3';
+import { Link, router, usePage } from '@inertiajs/vue3';
 import UserInfo from '@/components/UserInfo.vue';
 import Menu from 'primevue/menu';
-import { MenuItem } from 'primevue/menuitem';
+import type { MenuItem } from 'primevue/menuitem';
 import { edit } from '@/routes/profile';
 import { logout } from '@/routes';
-import { User } from '@/types';
+import UserAvatar from '@/components/UserAvatar.vue';
+import Button from 'primevue/button';
 
-defineProps<{user: User}>();
-
+const page = usePage();
+const user = page.props.auth.user;
 const userMenu = useTemplateRef('userMenu');
 const toggleMenu = (event: Event) => userMenu.value?.toggle(event);
 
@@ -52,6 +53,12 @@ defineExpose({ toggleMenu });
             </Link>
         </template>
     </Menu>
+
+    <Button variant="ghost"
+            class="rounded-full"
+            @click="toggleMenu">
+        <UserAvatar :user class="cursor-pointer"/>
+    </Button>
 </template>
 
 <style scoped></style>
