@@ -8,6 +8,15 @@ Inertia allows you to build modern, single-page Vue applications using classic s
 
 This Vue starter kit utilizes Vue 3 and the Composition API, TypeScript, Tailwind, and the [PrimeVue](https://www.primevue.com) component library.
 
+## Notes
+
+This starter kit is not officially maintained by the Laravel team.
+
+Please note that this starter kit is a fork of the official [Laravel + Vue 3 Inertia starter kit](https://github.com/laravel/vue-starter-kit) 
+and has been modified to include PrimeVue components and styles.
+
+This starter kit will be synced periodically with the official Laravel + Vue 3 Inertia starter kit to ensure it remains up-to-date with the latest features and improvements.
+
 ## Contributing
 
 Please feel free to submit issues and enhancement requests. Pull requests are welcome!
