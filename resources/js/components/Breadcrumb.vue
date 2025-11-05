@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PrimeBreadcrumb from 'primevue/breadcrumb';
-import { MenuItem } from 'primevue/menuitem';
+import type { MenuItem } from 'primevue/menuitem';
 import { Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
