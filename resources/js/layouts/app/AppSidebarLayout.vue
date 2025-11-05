@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppLogo from '@/components/AppLogo.vue';
-import { MenuItem } from 'primevue/menuitem';
+import type { MenuItem } from 'primevue/menuitem';
 import Breadcrumb from '@/components/Breadcrumb.vue';
 import UserMenu from '@/components/UserMenu.vue';
 import { useSidebar } from '@/composables/useSidebar';
