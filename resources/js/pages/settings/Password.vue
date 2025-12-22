@@ -10,7 +10,7 @@ import HeadingSmall from '@/components/HeadingSmall.vue';
 import Button from 'primevue/button';
 import Password from 'primevue/password';
 import Label from '@/components/Label.vue';
-import { MenuItem } from 'primevue/menuitem';
+import { type MenuItem } from 'primevue/menuitem';
 
 const breadcrumbItems: MenuItem[] = [
     {
