@@ -138,7 +138,7 @@ watch(
                                 v-if="!qrCodeSvg"
                                 class="absolute inset-0 z-10 flex aspect-square h-auto w-full animate-pulse items-center justify-center bg-background"
                             >
-                                <Loader2 class="size-6 animate-spin" />
+                                    <Loader2 class="size-6 animate-spin" />
                             </div>
                             <div
                                 v-else
@@ -146,7 +146,7 @@ watch(
                             >
                                 <div
                                     v-html="qrCodeSvg"
-                                    class="flex aspect-square size-full items-center justify-center"
+                                        class="aspect-square w-full justify-center rounded-lg bg-white p-2 [&_svg]:size-full"
                                 />
                             </div>
                         </div>

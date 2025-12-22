@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import RegisteredUserController from '@/actions/App/Http/Controllers/Auth/RegisteredUserController';
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import Button from 'primevue/button';
@@ -8,6 +7,7 @@ import InputText from 'primevue/inputtext';
 import Label from '@/components/Label.vue';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { login } from '@/routes';
+import { store } from '@/routes/register';
 import { Form, Head } from '@inertiajs/vue3';
 </script>
 
@@ -19,7 +19,7 @@ import { Form, Head } from '@inertiajs/vue3';
         <Head title="Register" />
 
         <Form
-            v-bind="RegisteredUserController.store.form()"
+            v-bind="store.form()"
             :reset-on-success="['password', 'password_confirmation']"
             v-slot="{ errors, processing }"
             class="flex flex-col gap-6"
