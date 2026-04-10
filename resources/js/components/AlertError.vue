@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import Message from 'primevue/message';
 import { AlertCircle } from 'lucide-vue-next';
 import { computed } from 'vue';
+import Message from 'primevue/message';
 
-interface Props {
+type Props = {
     errors: string[];
     title?: string;
-}
+};
 
 const props = withDefaults(defineProps<Props>(), {
     title: 'Something went wrong.',

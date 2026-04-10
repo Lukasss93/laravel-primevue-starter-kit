@@ -1,10 +1,9 @@
-import '../css/app.css';
-
 import { createInertiaApp } from '@inertiajs/vue3';
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import type { DefineComponent } from 'vue';
-import { createApp, h } from 'vue';
-import { initializeTheme } from './composables/useAppearance';
+import { initializeTheme } from '@/composables/useAppearance';
+import AppLayout from '@/layouts/AppLayout.vue';
+import AuthLayout from '@/layouts/AuthLayout.vue';
+import SettingsLayout from '@/layouts/settings/Layout.vue';
+import { initializeFlashToast } from '@/lib/flashToast';
 import PrimeVue from 'primevue/config';
 import PrimeVuePreset from './preset';
 import PrimeVuePassThrough from './passthrough';
@@ -14,14 +13,20 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
-    resolve: (name) =>
-        resolvePageComponent(
-            `./pages/${name}.vue`,
-            import.meta.glob<DefineComponent>('./pages/**/*.vue'),
-        ),
-    setup({ el, App, props, plugin }) {
-        createApp({ render: () => h(App, props) })
-            .use(plugin)
+    layout: (name) => {
+        switch (true) {
+            case name === 'Welcome':
+                return null;
+            case name.startsWith('auth/'):
+                return AuthLayout;
+            case name.startsWith('settings/'):
+                return [AppLayout, SettingsLayout];
+            default:
+                return AppLayout;
+        }
+    },
+    withApp(app) {
+        app
             .use(PrimeVue, {
                 theme: {
                     preset: PrimeVuePreset,
@@ -31,8 +36,7 @@ createInertiaApp({
                 },
                 pt: PrimeVuePassThrough,
             })
-            .directive('styleclass', StyleClass)
-            .mount(el);
+            .directive('styleclass', StyleClass);
     },
     progress: {
         color: '#F53003',
@@ -41,3 +45,6 @@ createInertiaApp({
 
 // This will set light / dark mode on page load...
 initializeTheme();
+
+// This will listen for flash toast data from the server...
+initializeFlashToast();

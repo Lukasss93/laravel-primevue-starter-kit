@@ -1,14 +1,15 @@
 <script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
 import Heading from '@/components/Heading.vue';
+import ButtonLink from '@/components/ButtonLink.vue';
 import Divider from 'primevue/divider';
-import { urlIsActive } from '@/lib/utils';
+import { useCurrentUrl } from '@/composables/useCurrentUrl';
+import { toUrl } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit as editProfile } from '@/routes/profile';
-import { show } from '@/routes/two-factor';
-import { edit as editPassword } from '@/routes/user-password';
+import { edit as editSecurity } from '@/routes/security';
 import { type NavItem } from '@/types';
-import { KeyRound, Palette, RectangleEllipsis, User } from 'lucide-vue-next';
-import ButtonLink from '@/components/ButtonLink.vue';
+import { KeyRound, Palette, User } from 'lucide-vue-next';
 
 const sidebarNavItems: NavItem[] = [
     {
@@ -17,14 +18,9 @@ const sidebarNavItems: NavItem[] = [
         icon: User,
     },
     {
-        title: 'Password',
-        href: editPassword(),
+        title: 'Security',
+        href: editSecurity(),
         icon: KeyRound,
-    },
-    {
-        title: 'Two-Factor Auth',
-        href: show(),
-        icon: RectangleEllipsis,
     },
     {
         title: 'Appearance',
@@ -33,7 +29,7 @@ const sidebarNavItems: NavItem[] = [
     },
 ];
 
-const currentPath = typeof window !== undefined ? window.location.pathname : '';
+const { isCurrentOrParentUrl } = useCurrentUrl();
 </script>
 
 <template>
@@ -47,11 +43,11 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
             <aside class="w-full max-w-xl lg:w-48">
                 <nav class="flex flex-col space-y-1 space-x-0">
                     <ButtonLink
-                        v-for="(item, i) in sidebarNavItems"
-                        :key="i"
+                        v-for="item in sidebarNavItems"
+                        :key="toUrl(item.href)"
                         :href="item.href"
                         size="small"
-                        :variant="!urlIsActive(item.href, currentPath)?'text':undefined"
+                        :variant="!isCurrentOrParentUrl(item.href)?'text':undefined"
                         severity="secondary"
                     >
                         <div class="flex w-full items-center flex-row gap-2">

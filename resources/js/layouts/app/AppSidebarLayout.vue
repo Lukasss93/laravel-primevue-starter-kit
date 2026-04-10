@@ -5,6 +5,7 @@ import Breadcrumb from '@/components/Breadcrumb.vue';
 import UserMenu from '@/components/UserMenu.vue';
 import { useSidebar } from '@/composables/useSidebar';
 import Sidebar from '@/components/Sidebar.vue';
+import { Toaster } from '@/components/ui/sonner';
 
 const {
     breadcrumb = [],
@@ -22,6 +23,8 @@ useSidebar({
 </script>
 
 <template>
+    <Toaster />
+
     <div id="layout-sidebar-container" class="min-h-screen flex relative lg:static bg-surface-50 dark:bg-surface-950">
         <div id="layout-sidebar-menu" class="bg-surface-900 h-screen hidden lg:block shrink-0 absolute lg:static left-0 top-0 z-10 border-r border-surface-800 select-none">
             <div class="flex flex-col h-full">

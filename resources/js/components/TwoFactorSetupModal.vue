@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { Form } from '@inertiajs/vue3';
+import { useClipboard } from '@vueuse/core';
+import { Check, Copy, ScanLine } from 'lucide-vue-next';
+import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
 import AlertError from '@/components/AlertError.vue';
 import InputError from '@/components/InputError.vue';
 import InputGroup from 'primevue/inputgroup';
@@ -11,12 +15,9 @@ import ProgressSpinner from 'primevue/progressspinner';
 import InputOtp from 'primevue/inputotp';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import { confirm } from '@/routes/two-factor';
-import { Form } from '@inertiajs/vue3';
-import { useClipboard } from '@vueuse/core';
-import { Check, Copy, Loader2, ScanLine } from 'lucide-vue-next';
-import { computed, nextTick, ref, watch } from 'vue';
+import type { TwoFactorConfigContent } from '@/types';
 
-interface Props {
+type Props = {
     requiresConfirmation: boolean;
     twoFactorEnabled: boolean;
 }
@@ -33,14 +34,10 @@ const code = ref<string>('');
 
 const pinInputContainerRef = ref<HTMLElement | null>(null);
 
-const modalConfig = computed<{
-    title: string;
-    description: string;
-    buttonText: string;
-}>(() => {
+const modalConfig = computed<TwoFactorConfigContent>(() => {
     if (props.twoFactorEnabled) {
         return {
-            title: 'Two-Factor Authentication Enabled',
+            title: 'Two-factor authentication enabled',
             description:
                 'Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.',
             buttonText: 'Close',
@@ -49,14 +46,14 @@ const modalConfig = computed<{
 
     if (showVerificationStep.value) {
         return {
-            title: 'Verify Authentication Code',
+            title: 'Verify authentication code',
             description: 'Enter the 6-digit code from your authenticator app',
             buttonText: 'Continue',
         };
     }
 
     return {
-        title: 'Enable Two-Factor Authentication',
+        title: 'Enable two-factor authentication',
         description:
             'To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app',
         buttonText: 'Continue',
@@ -92,6 +89,7 @@ watch(
     async (isOpen) => {
         if (!isOpen) {
             resetModalState();
+
             return;
         }
 
@@ -178,6 +176,7 @@ watch(
             <template v-else>
                 <Form
                     v-bind="confirm.form()"
+                    error-bag="confirmTwoFactorAuthentication"
                     reset-on-error
                     :transform="(data) => ({ ...data, code })"
                     @finish="code = ''"
