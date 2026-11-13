@@ -18,6 +18,7 @@ defineOptions({
 const props = defineProps<{
     token: string;
     email: string;
+    passwordRules: string;
 }>();
 
 const inputEmail = ref(props.email);
@@ -57,6 +58,7 @@ const inputEmail = ref(props.email);
                     required
                     autofocus
                     placeholder="Password"
+                    :passwordrules="passwordRules"
                 />
                 <InputError :message="errors.password" />
             </div>
@@ -71,6 +73,7 @@ const inputEmail = ref(props.email);
                     fluid
                     required
                     placeholder="Confirm password"
+                    :passwordrules="passwordRules"
                 />
                 <InputError :message="errors.password_confirmation" />
             </div>

@@ -10,6 +10,7 @@ import Label from '@/components/Label.vue';
 import { register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
+import PasskeyVerify from '@/components/PasskeyVerify.vue';
 
 defineOptions({
     layout: {
@@ -21,7 +22,6 @@ defineOptions({
 defineProps<{
     status?: string;
     canResetPassword: boolean;
-    canRegister: boolean;
 }>();
 </script>
 
@@ -34,6 +34,8 @@ defineProps<{
     >
         {{ status }}
     </div>
+
+    <PasskeyVerify />
 
     <Form
         v-bind="store.form()"
@@ -101,10 +103,7 @@ defineProps<{
                 />
         </div>
 
-        <div
-            class="text-center text-sm text-muted-foreground"
-            v-if="canRegister"
-        >
+        <div class="text-center text-sm text-muted-foreground">
             Don't have an account?
             <TextLink :href="register()" :tabindex="5">Sign up</TextLink>
         </div>
