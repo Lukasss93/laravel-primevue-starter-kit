@@ -16,10 +16,11 @@ import type { Props as ManageTwoFactorProps } from '@/components/ManageTwoFactor
 import ManageTwoFactor from '@/components/ManageTwoFactor.vue';
 /* @end-chisel-2fa */
 
+// oxfmt-ignore
 type Props = {
     passwordRules: string;
 } /* @chisel-passkeys */ & ManagePasskeysProps /* @end-chisel-passkeys */ /* @chisel-2fa */ &
-    ManageTwoFactorProps /* @end-chisel-2fa */;
+    ManageTwoFactorProps; /* @end-chisel-2fa */
 
 const props = defineProps<Props>();
 
@@ -104,7 +105,7 @@ defineOptions({
                     :disabled="processing"
                     data-test="update-password-button"
                 >
-                    Save password
+                    Save
                 </Button>
             </div>
         </Form>

@@ -15,7 +15,7 @@ function chiselRun(array $command, string $label): void
         label: $label,
         keepSummary: true,
         callback: function (Logger $logger) use ($command) {
-            $process = new Process($command);
+            $process = new Process($command, __DIR__);
             $process->run(function ($type, $line) use ($logger) {
                 $logger->line($line);
             });
@@ -39,9 +39,32 @@ function chiselRun(array $command, string $label): void
     }
 }
 
+function chiselSkipsNode(): bool
+{
+    return filter_var(
+        $_ENV['LARAVEL_INSTALLER_NO_NODE']
+            ?? $_SERVER['LARAVEL_INSTALLER_NO_NODE']
+            ?? getenv('LARAVEL_INSTALLER_NO_NODE'),
+        FILTER_VALIDATE_BOOL,
+    );
+}
+
+function chiselRemoveNpmPackages(Chisel $c, string ...$packages): void
+{
+    if (! chiselSkipsNode()) {
+        $c->npm()->remove(...$packages);
+
+        return;
+    }
+
+    foreach ($packages as $package) {
+        $c->file('package.json')->removeLinesContaining('"'.$package.'":');
+    }
+}
+
 /**
  * Framework-specific filenames are supplied by the sibling chisel-paths.php
- * that ships with each Inertia kit (React/Svelte/Vue). After build both files
+ * that ships with each Inertia kit (React/Svelte/Vue). After build, both files
  * land in the project root.
  *
  * @var array{
@@ -127,6 +150,7 @@ return Chisel::script(__DIR__)
             )->removeSection('email-verification');
 
             $c->files(
+                'app/Http/Responses/VerifyEmailResponse.php',
                 $paths['verify_email'],
                 'tests/Feature/Auth/EmailVerificationTest.php',
                 'tests/Feature/Auth/VerificationNotificationTest.php',
@@ -140,6 +164,7 @@ return Chisel::script(__DIR__)
             $c->files(
                 'app/Models/User.php',
                 'database/factories/UserFactory.php',
+                'tests/Feature/Auth/AuthenticationTest.php',
                 $paths['security'],
                 $paths['auth_types'],
                 'config/fortify.php',
@@ -155,6 +180,7 @@ return Chisel::script(__DIR__)
             $c->files(
                 'app/Models/User.php',
                 'database/factories/UserFactory.php',
+                'tests/Feature/Auth/AuthenticationTest.php',
                 'config/fortify.php',
                 'app/Providers/FortifyServiceProvider.php',
                 'app/Http/Controllers/Settings/SecurityController.php',
@@ -163,7 +189,7 @@ return Chisel::script(__DIR__)
             )->removeSection('2fa');
 
             if ($paths['two_factor_otp_package'] !== null) {
-                $c->npm()->remove($paths['two_factor_otp_package']);
+                chiselRemoveNpmPackages($c, $paths['two_factor_otp_package']);
             }
 
             $c->files(...[
@@ -182,8 +208,10 @@ return Chisel::script(__DIR__)
                 'config/fortify.php',
                 'app/Providers/FortifyServiceProvider.php',
                 'app/Http/Controllers/Settings/SecurityController.php',
+                'routes/settings.php',
                 'tests/Feature/Auth/AuthenticationTest.php',
                 'tests/Feature/Settings/SecurityTest.php',
+                $paths['auth_types'],
                 $paths['security'],
                 $paths['login'],
                 $paths['confirm_password'],
@@ -200,14 +228,16 @@ return Chisel::script(__DIR__)
                 'config/fortify.php',
                 'app/Providers/FortifyServiceProvider.php',
                 'app/Http/Controllers/Settings/SecurityController.php',
+                'routes/settings.php',
                 'tests/Feature/Auth/AuthenticationTest.php',
                 'tests/Feature/Settings/SecurityTest.php',
+                $paths['auth_types'],
                 $paths['security'],
                 $paths['login'],
                 $paths['confirm_password'],
             )->removeSection('passkeys');
 
-            $c->npm()->remove('@laravel/passkeys');
+            chiselRemoveNpmPackages($c, '@laravel/passkeys');
 
             $c->files(...[
                 ...$paths['passkey_files'],
@@ -255,19 +285,16 @@ return Chisel::script(__DIR__)
         },
     )
     ->apply(function (Chisel $c): void {
-        $c->file('eslint.config.js')->replace(
-            "// alphabetize: { order: 'asc', caseInsensitive: true },",
-            "alphabetize: { order: 'asc', caseInsensitive: true },",
-        );
-
-        chiselRun(['composer', 'lint'], 'Composer Lint');
-        chiselRun(['php', 'artisan', 'wayfinder:generate', '--with-form', '--no-interaction'], 'Generate Wayfinder Resources');
-
-        $c->npm()->run('lint');
-        $c->npm()->run('format');
-
         $c->file('composer.json')
             ->removeLinesContaining('"@php artisan install:features --ansi"');
+
+        chiselRun(['composer', 'lint'], 'Composer Lint');
+        // Use the same PHP executable as Artisan when Windows has multiple installations on PATH.
+        chiselRun([PHP_BINARY, 'artisan', 'wayfinder:generate', '--with-form', '--no-interaction'], 'Generate Wayfinder Resources');
+
+        if (! chiselSkipsNode()) {
+            $c->npm()->run('check:fix');
+        }
 
         $c->files(
             'app/Console/Commands/InstallFeaturesCommand.php',

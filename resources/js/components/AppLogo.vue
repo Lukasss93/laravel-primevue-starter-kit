@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { usePage } from '@inertiajs/vue3';
+import AppLogoIcon from '@/components/AppLogoIcon.vue';
 
-const page = usePage();
+const name = usePage().props.name;
 </script>
 
 <template>
@@ -13,7 +13,7 @@ const page = usePage();
     </div>
     <div class="ml-1 grid flex-1 text-left text-sm">
         <span class="mb-0.5 truncate leading-tight font-semibold">
-            {{ page.props.name }}
+            {{ name }}
         </span>
     </div>
 </template>

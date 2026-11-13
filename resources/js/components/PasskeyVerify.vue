@@ -2,7 +2,7 @@
 import type { UrlMethodPair } from '@inertiajs/core';
 import { router } from '@inertiajs/vue3';
 import { usePasskeyVerify } from '@laravel/passkeys/vue';
-import { KeyRound } from 'lucide-vue-next';
+import { KeyRound } from '@lucide/vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -50,7 +50,7 @@ const { verify, isLoading, error, isSupported } = usePasskeyVerify({
                 {{
                     isLoading
                         ? (props.loadingLabel ?? 'Authenticating...')
-                        : (props.label ?? 'Sign in with passkey')
+                        : (props.label ?? 'Sign in with a passkey')
                 }}
             </Button>
 
